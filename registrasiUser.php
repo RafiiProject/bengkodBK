@@ -48,64 +48,149 @@ if (isset($_POST['register'])) {
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrasi</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Tambahan CSS -->
     <style>
-        .register-container {
-            max-width: 1000px;
-            width: 500px;
-            margin-top: 80px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #b4c6d0;
         }
-        .register-title  {
-            font-size: 24px;
-            font-weight: bold;
+
+        .login-container {
+            display: flex;
+            max-width: 1200px;
+            /* Ubah max-width sesuai kebutuhan */
+            background-color: #fff;
+            color: #000000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
-        .card-body{
-            border: 1px solid #ddd;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+        .left-container {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .right-container {
+            flex: 1;
+            padding: 40px;
+            /* Menambahkan padding untuk memperbesar area formulir */
+        }
+
+        .login-form {
+            max-width: 400px;
+            /* Sesuaikan dengan kebutuhan */
+            margin: 0 auto;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            /* Tengahkan judul */
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: none;
+            /* Hapus border */
+            border-bottom: 1px solid #ccc;
+            /* Tambahkan garis bawah */
+            outline: none;
+            /* Hapus outline */
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #588163;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .register-link a {
+            color: #588163;
+            text-decoration: none;
         }
     </style>
 </head>
+
 <body>
-    <h1>RegistrasiUser</h1>
-<div class="container d-flex justify-content-center">
-    <div class="card register-container shadow">
-        <div class="card-body">
-            <h2 class="text-center register-title mb-4">Register</h2>
-            <?php if ($error): ?>
-                <div class="alert alert-danger" role="alert">
-                    <?= $error ?>
-                </div>
-            <?php endif; ?>
-            <div>
-                <form method="POST" action="registrasiUser.php">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Konfirmasi Password</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Konfirmasi password" required>
-                    </div>
-                    <button type="submit" name="register" class="btn btn-primary w-100">Register</button>
+    <div class="login-container">
+        <div class="left-container">
+            <img src="assets/images/logopalang.png" alt="Login Image">
+        </div>
+        <div class="right-container">
+            <div class="login-form">
+                <br><br><br>
+                <h4 class="text-center">Registrasi Disini </h4>
+                <p class="login-box-msg text-center">Data Diri <span
+                        class="text-primary">Pasien</span> </p>
+                <form action="pages/register/checkRegister.php" method="post">
+                    <label for="nama">Nama :</label>
+                    <input type="text" class="form-control" name="nama" required>
+
+                    <label for="no_hp">Nomor KTP :</label>
+                    <input type="number" class="form-control" name="no_ktp" required>
+
+                    <label for="no_hp">Alamat :</label>
+                    <input class="form-control" id="alamat" name="alamat" required></input>
+
+                    <label for="no_hp">Password :</label>
+                    <input type="password" class="form-control" name="password" required>
+
+                    <label for="no_hp">Nomor Handphone :</label>
+                    <input type="number" class="form-control" name="no_hp" required>
+
+                    <button type="submit" class="btn btn-block btn-primary">
+                        Buat Akun
+                    </button>
                 </form>
-            <div class="login-link mt-3">
-                Sudah punya akun? <a href="index.php?page=loginUser.php">Login</a>
+
+            </div>
+            <div class="text-center mt-3">
+                <p>Sudah punya akun?</p>
+                <a href="loginUser.php" class="">
+                    Login
+                </a>
             </div>
         </div>
     </div>
-</div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
+</html>
+</script>
+</body>
+
 </html>

@@ -1,112 +1,75 @@
+<!DOCTYPE html>
 <?php
-include_once("koneksi.php");
+    session_start();
+    $username = $_SESSION['username'];
 
-if (isset($_POST['simpan'])) {
-    $id = $_POST['id'];
-    $nama = $_POST['nama'];
-    $alamat = $_POST['alamat'];
-    $no_hp = $_POST['no_hp'];
-    
-    if ($id) {
-        // Update existing data
-        $query = "UPDATE dokter SET nama='$nama', alamat='$alamat', no_hp='$no_hp' WHERE id='$id'";
-        mysqli_query($mysqli, $query);
-        $_SESSION['message'] = "Data berhasil diperbarui!";
-    } else {
-        // Insert new data
-        $query = "INSERT INTO dokter (nama, alamat, no_hp) VALUES ('$nama', '$alamat', '$no_hp')";
-        mysqli_query($mysqli, $query);
-        $_SESSION['message'] = "Data berhasil ditambahkan!";
+    if ($username == "") {
+        header("location:login.php");
     }
-    header("Location: index.php?page=dokter");
-    exit();
-}
-
-if (isset($_GET['aksi']) && $_GET['aksi'] == 'hapus' && isset($_GET['id'])) {
-    $id = $_GET['id'];
-    mysqli_query($mysqli, "DELETE FROM dokter WHERE id='$id'");
-    $_SESSION['message'] = "Data berhasil dihapus!";
-    header("Location: index.php?page=dokter");
-    exit();
-}
-
-$nama = '';
-$alamat = '';
-$no_hp = '';
-$id = '';
-
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-    $ambil = mysqli_query($mysqli, "SELECT * FROM dokter WHERE id='$id'");
-    $row = mysqli_fetch_array($ambil);
-    $nama = $row['nama'];
-    $alamat = $row['alamat'];
-    $no_hp = $row['no_hp'];
-}
+    // else if ($$_SESSION['akses'] != "admin") {
+    //     echo '<script>alert("Anda tidak memiliki akses");window.location.href="login.php";</script>';
+    //     $idDokter = $_SESSION['id'];
+    // }
 ?>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
 
-<div class="container">
-    <h3>Dokter</h3>
-    <hr>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Udinus Poliklinik</title>
 
-    <!-- Success Message -->
-    <?php if (isset($_SESSION['message'])): ?>
-        <div class="alert alert-success">
-            <?php
-            echo $_SESSION['message'];
-            unset($_SESSION['message']); // Clear message after displaying
-            ?>
-        </div>
-    <?php endif; ?>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="assets/dist/css/adminlte.min.css">
+</head>
 
-    <form method="POST" action="">
-        <input type="hidden" name="id" value="<?php echo $id; ?>">
-        
-        <div class="mb-3">
-            <label for="inputNama" class="form-label">Nama</label>
-            <input type="text" class="form-control" name="nama" id="inputNama" placeholder="Nama" value="<?php echo $nama; ?>" required>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <?php include ('components/navbar.php') ?>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <?php include ('components/sidebar.php') ?>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <?php include ('page/dokter/index.php') ?>
+            <!-- /.content -->
         </div>
-        
-        <div class="mb-3">
-            <label for="inputAlamat" class="form-label">Alamat</label>
-            <input type="text" class="form-control" name="alamat" id="inputAlamat" placeholder="Alamat" value="<?php echo $alamat; ?>" required>
-        </div>
-        
-        <div class="mb-3">
-            <label for="inputNoHP" class="form-label">No HP</label>
-            <input type="text" class="form-control" name="no_hp" id="inputNoHP" placeholder="No HP" value="<?php echo $no_hp; ?>" required>
-        </div>
-        
-        <button type="submit" class="btn btn-primary rounded-pill" name="simpan">Simpan</button>
-    </form>
-    
-    <table class="table table-hover mt-4">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Nama</th>
-            <th>Alamat</th>
-            <th>No HP</th>
-            <th>Aksi</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        $result = mysqli_query($mysqli, "SELECT * FROM dokter ORDER BY id ASC");
-        $no = 1;
-        while ($data = mysqli_fetch_array($result)) {
-        ?>
-            <tr>
-                <th><?php echo $no++; ?></th>
-                <td><?php echo $data['nama']; ?></td>
-                <td><?php echo $data['alamat']; ?></td>
-                <td><?php echo $data['no_hp']; ?></td>
-                <td>
-                    <a class="btn btn-success rounded-pill px-3" href="index.php?page=dokter&id=<?php echo $data['id']; ?>">Ubah</a>
-                    <a class="btn btn-danger rounded-pill" href="index.php?page=dokter&id=<?php echo $data['id']; ?>&aksi=hapus" onclick="return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
-                </td>
-            </tr>
-        <?php } ?>
-        </tbody>
-    </table>
-</div>
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3">
+                <h5>Title</h5>
+                <p>Sidebar content</p>
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+
+        <!-- Main Footer -->
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- REQUIRED SCRIPTS -->
+
+    <!-- jQuery -->
+    <script src="assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="assets/dist/js/adminlte.min.js"></script>
+</body>
+
+</html>

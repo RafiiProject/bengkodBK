@@ -1,89 +1,134 @@
-<?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-include 'koneksi.php';
-include_once 'navbar.php';
-
-$error = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    // Menggunakan prepared statement
-    $stmt = $mysqli->prepare("SELECT * FROM user WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['username'] = $username;
-            $_SESSION['user_id'] = $row['id_user'];
-            header("Location: index.php");
-            exit;
-        } else {
-            $error = "Password salah.";
-        }
-    } else {
-        $error = "Username tidak ditemukan.";
-    }
-}
-
-?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Tambahan CSS -->
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #517f5a;
+        }
+
         .login-container {
-            max-width: 400px;
-            margin-top: 80px;
+            display: flex;
+            max-width: 1200px;
+            /* Ubah max-width sesuai kebutuhan */
+            background-color: #fff;
+            color: #00000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
         }
-        .login-title {
-            font-size: 24px;
-            font-weight: bold;
+
+        .left-container {
+            flex: 1;
+            overflow: hidden;
         }
+
+        .left-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .right-container {
+            flex: 1;
+            padding: 40px;
+            /* Menambahkan padding untuk memperbesar area formulir */
+        }
+
         .login-form {
-            border: 1px solid #ddd;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            max-width: 400px;
+            /* Sesuaikan dengan kebutuhan */
+            margin: 0 auto;
+        }
+
+        .login-form h2 {
+            text-align: center;
+            /* Tengahkan judul */
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: none;
+            /* Hapus border */
+            border-bottom: 1px solid #ccc;
+            /* Tambahkan garis bawah */
+            outline: none;
+            /* Hapus outline */
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #588163;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .register-link a {
+            color: #3498db;
+            text-decoration: none;
         }
     </style>
 </head>
-<body>
-<h1>LoginUser</h1>
-<div class="container login-container">
-<div class="login-form">
-    <h2 class="text-center login-title mb-4">Login</h2>
-    <?php if ($error): ?>
-        <div class="alert alert-danger" role="alert">
-            <?= $error ?>
-        </div>
-    <?php endif; ?>
-    
-    <form action="loginUser.php" method="POST">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Masuk</button>
-        <p>Belum Punya Akun? <a href="index.php?page=registrasiUser.php">Daftar</a></p>
-    </form>
-</div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<body>
+    <div class="login-container">
+        <div class="left-container">
+            <img src="assets/images/logo_poli.jpg" alt="Login Image">
+        </div>
+        <div class="right-container">
+            <div class="login-form">
+                <h4 class="text-center">Login </h4>
+                <p class="login-box-msg text-center">Lakukan login <b class="text-success">Dokter</b> untuk melayani</p>
+                <br><br>
+                <form action="checkLoginUser.php" method="post">
+                    <label for="nama">Username :</label>
+                    <input type="text" class="form-control" name="username" required>
+
+                    <label for="no_hp">Password :</label>
+                    <input type="password" class="form-control" name="password" required>
+
+                    <button type="submit" class="btn btn-block btn-success">
+                        Masuk
+                    </button>
+                </form>
+
+            </div>
+            <div class="text-center mt-3"> <a href="loginUser.php"><span
+                        class="text-primary">Pasien klik disini</span></a>
+            </div>
+        </div>
+    </div>
+    </div>
+
 </body>
+
+</html>
+</script>
+</body>
+
 </html>
